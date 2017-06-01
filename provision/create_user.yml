@@ -1,0 +1,18 @@
+---
+- hosts: server_root
+  become: true
+  roles:
+     - create_user
+
+  vars_files: [vars.yml]
+  gather_facts: false
+  pre_tasks:
+
+  - name: Install python2 for Ansible
+    raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python-minimal)"
+    register: output
+    changed_when:
+    - output.stdout != ""
+    - output.stdout != "\r\n"
+  - name: Gathering Facts
+    setup:

@@ -1,0 +1,30 @@
+---
+- apt: update_cache=yes cache_valid_time=3600
+
+- name: unzip and zip
+  apt: name={{ item }} state=present
+  with_items:
+    - unzip
+    - zip
+
+- name: Creates vocbench2 directory
+  file: path=/home/vb2/vocbench2 state=directory owner=vb2
+
+- unarchive:
+    src: https://bitbucket.org/art-uniroma2/vocbench2/downloads/VOCBENCH_2.4.4.zip
+    dest: /home/vb2/vocbench2
+    remote_src: True
+    mode: 0664
+
+- name: list contents of vocbench2
+  command: ls /home/vb2/vocbench2/
+
+
+- command: "unzip semanticturkey-0.12.2+vb-bundle-2.4.4.zip"
+  ignore_errors: yes
+  args:
+      chdir: /home/vb2/vocbench2/
+
+- command: "mv semanticturkey-0.12.2-2017-03-02 semanticturkey"
+  args:
+      chdir: /home/vb2/vocbench2/
