@@ -1,0 +1,69 @@
+---
+- apt: update_cache=yes cache_valid_time=3600
+
+- name: Set MySQL root password before installing
+  debconf: name='mysql-server' question='mysql-server/root_password' value='{{mysql_root_password | quote}}' vtype='password'
+
+- name: Confirm MySQL root password before installing
+  debconf:
+    name: mysql-server
+    question: mysql-server/root_password_again
+    value: "{{mysql_root_password | quote}}"
+    vtype: password
+
+- name : Install MySQL Server
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - build-essential
+  - python-setuptools
+  - mysql-server
+  - python-mysqldb
+  - libmysqlclient-dev
+  - python3-dev
+  - python3-pip
+  - mysql-client
+
+  notify: restart mysql
+
+- name: Add .my.cnf
+  template:
+    src: my.cnf
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: 0600
+    backup: yes
+
+- name: Add mysqld.cnf
+  template:
+    src: mysqld.cnf
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    owner: root
+    group: root
+    mode: 0600
+    backup: yes
+
+- name: Reload privilege tables
+  command: 'mysql -ne "{{ item }}"'
+  with_items:
+    - FLUSH PRIVILEGES
+  changed_when: False
+
+- name: Remove anonymous users
+  command: 'mysql -ne "{{ item }}"'
+  with_items:
+    - DELETE FROM mysql.user WHERE User=''
+  changed_when: False
+
+- name: Remove test database and access to it
+  command: 'mysql -ne "{{ item }}"'
+  with_items:
+    - DROP DATABASE test
+    - DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'
+  changed_when: False
+  ignore_errors: True
+
+  notify: restart mysql
+

@@ -1,0 +1,14 @@
+[program:st-server]
+command = cd /home/vb2/vocbench2/semanticturkey/bin/ && ./st_server_run
+process_name = st-server
+directory = /home/vb2/vocbench2/semanticturkey/
+priority = 100
+redirect_stderr = true
+stdout_logfile = /var/log/st-server.log
+stopsignal = INT
+autostart=true
+autorestart=true
+numprocs=1
+environment=PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin/"
+environment=C_FORCE_ROOT="true"
+user=vb2

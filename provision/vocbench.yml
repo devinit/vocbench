@@ -2,5 +2,9 @@
 - hosts: server
   become: true
   roles:
+     - mysql
      - tomcat
      - vocbench2
+     - stserver
+
+  vars_files: [vars.yml]

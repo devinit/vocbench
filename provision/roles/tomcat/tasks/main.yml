@@ -8,3 +8,7 @@
     - tomcat8
     - tomcat8-admin
     - libmysql-java
+- name: tomcat
+  apt: name={{ item }} state=absent
+  with_items:
+    - apache2

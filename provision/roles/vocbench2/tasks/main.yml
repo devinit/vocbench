@@ -10,21 +10,43 @@
 - name: Creates vocbench2 directory
   file: path=/home/vb2/vocbench2 state=directory owner=vb2
 
-- unarchive:
+- name: downloading vocbench2.4.4 from bitbucket
+  unarchive:
     src: https://bitbucket.org/art-uniroma2/vocbench2/downloads/VOCBENCH_2.4.4.zip
     dest: /home/vb2/vocbench2
     remote_src: True
     mode: 0664
 
-- name: list contents of vocbench2
-  command: ls /home/vb2/vocbench2/
-
-
-- command: "unzip semanticturkey-0.12.2+vb-bundle-2.4.4.zip"
+- name: unzipping semanticturkey zip download
+  command: "unzip semanticturkey-0.12.2+vb-bundle-2.4.4.zip"
   ignore_errors: yes
   args:
       chdir: /home/vb2/vocbench2/
 
-- command: "mv semanticturkey-0.12.2-2017-03-02 semanticturkey"
+- file: path=/home/vb2/vocbench2/semanticturkey state=absent
+
+- name: renaming unzipped file
+  command: "mv -f semanticturkey-0.12.2-2017-03-02 semanticturkey"
   args:
       chdir: /home/vb2/vocbench2/
+
+- name: moving war file to tomcat root
+  copy:
+    src: "/home/vb2/vocbench2/vocbench-2.4.4.war"
+    dest: /var/lib/tomcat8/webapps/vocbench-2.4.4.war
+    remote_src: yes
+
+- name: adding vocbench to root xml to catalina
+  template:
+    src: root.xml.j2
+    dest: /etc/tomcat8/Catalina/localhost/ROOT.xml
+    force: yes
+
+- name: removing root.xml
+  file: path=/etc/tomcat8/Catalina/localhost/ROOT.xml state=absent
+
+- name: restarting server
+  service: 
+    name: tomcat8
+    state: restarted
+

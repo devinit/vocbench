@@ -1,0 +1,10 @@
+---
+- apt: name={{ item }} state=present
+  with_items:
+    - supervisor
+
+- template: src=supervisor.conf.j2 dest=/etc/supervisor/conf.d/st-server.conf
+
+- service: name=supervisor state=started
+
+- supervisorctl: name=st-server state=restarted
