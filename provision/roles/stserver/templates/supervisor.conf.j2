@@ -1,5 +1,5 @@
 [program:st-server]
-command = cd /home/vb2/vocbench2/semanticturkey/bin/ && ./st_server_run
+command = "/home/vb2/vocbench2/semanticturkey/bin/st_server_run"
 process_name = st-server
 directory = /home/vb2/vocbench2/semanticturkey/
 priority = 100
@@ -11,4 +11,4 @@ autorestart=true
 numprocs=1
 environment=PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin/"
 environment=C_FORCE_ROOT="true"
-user=vb2
+user=root

@@ -30,6 +30,11 @@
   args:
       chdir: /home/vb2/vocbench2/
 
+- name: changing mode on semanticturkey 
+  file: 
+    path: /home/vb2/vocbench2/semanticturkey 
+    mode: 0755
+
 - name: moving war file to tomcat root
   copy:
     src: "/home/vb2/vocbench2/vocbench-2.4.4.war"
