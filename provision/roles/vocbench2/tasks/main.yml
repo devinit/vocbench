@@ -30,15 +30,20 @@
   args:
       chdir: /home/vb2/vocbench2/
 
-- name: changing mode on semanticturkey 
-  file: 
-    path: /home/vb2/vocbench2/semanticturkey 
+- name: changing mode on semanticturkey
+  file:
+    path: /home/vb2/vocbench2/semanticturkey
     mode: 0755
+
+- name: changing mode on semanticturkey
+  file:
+    path: /var/lib/tomcat8/webapps/ROOT
+    state: absent
 
 - name: moving war file to tomcat root
   copy:
     src: "/home/vb2/vocbench2/vocbench-2.4.4.war"
-    dest: /var/lib/tomcat8/webapps/vocbench-2.4.4.war
+    dest: /var/lib/tomcat8/webapps/ROOT.war
     remote_src: yes
 
 - name: adding vocbench to root xml to catalina
@@ -51,7 +56,6 @@
   file: path=/etc/tomcat8/Catalina/localhost/ROOT.xml state=absent
 
 - name: restarting server
-  service: 
+  service:
     name: tomcat8
     state: restarted
-

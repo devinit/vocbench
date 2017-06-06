@@ -1,0 +1,12 @@
+server {
+    listen         80;
+    server_name    178.79.149.95;
+
+    charset utf-8;
+    access_log /var/log/nginx/vocbench2.access.log;
+    error_log /var/log/nginx/vocbench2.error.log;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+    }
+}

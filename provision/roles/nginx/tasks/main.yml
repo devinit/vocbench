@@ -1,0 +1,18 @@
+---
+- apt: update_cache=yes cache_valid_time=3600
+
+- apt: name={{item}} state=present
+  with_items:
+    - nginx
+
+- template: src=nginx.conf.j2 dest=/etc/nginx/sites-enabled/vocbench2
+  become: true
+
+- file: path=/etc/nginx/sites-available/default state=absent
+
+- file: path=/etc/nginx/sites-enabled/default state=absent
+
+- file: path=/etc/nginx/ssl state=directory
+
+- service: name=nginx state=restarted
+  sudo: yes

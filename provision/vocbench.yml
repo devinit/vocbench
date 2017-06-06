@@ -6,5 +6,6 @@
      - tomcat
      - vocbench2
      - stserver
+     - nginx
 
   vars_files: [vars.yml]
